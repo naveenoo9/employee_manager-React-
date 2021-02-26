@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const EMP_API_BASE_URL = 'http://localhost:8080/api/employees';
+const EMP_API_BASE_URL_LOCALHOST = 'http://localhost:8080/api/employees', EMP_API_BASE_URL = 'https://my-employee-manager-postgresql.herokuapp.com/api/employees';
 
 class EmployeeService {
     getlistOfAllEmployees() {
