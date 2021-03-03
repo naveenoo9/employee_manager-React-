@@ -49,7 +49,7 @@ class ListOfAllEmployees extends PureComponent {
             <div className="ui segment ">
                 <div>
                     <button className="ui icon left labeled button" onClick={this.saveEmployee}>
-                        <i aria-hidden="true" className="add icon"></i>Add new Employee</button>
+                        <i aria-hidden="true" className="add user icon"></i>Add new Employee</button>
                 </div>
                 <table className="ui single line table">
                     <thead className="">
