@@ -9,26 +9,44 @@ class ListOfAllEmployees extends PureComponent {
         this.state = {
             employees : []
         }
+        this.saveEmployee = this.saveEmployee.bind(this);
+        this.updateEmployee = this.updateEmployee.bind(this);
+        this.deleteEmployee = this.deleteEmployee.bind(this);
     }
     saveEmployee = () =>    {
         this.props.history.push('/add-employee');
     }
-    updateEmployee = () =>  {
-        this.props.history.push('/update-employee');
+    updateEmployee = (empId) =>  {
+        this.props.history.push(`/update-employee/${empId}`);
     }
-    deleteEmployee = () =>  {
-        this.props.history.push('/delete-employee');
+    deleteEmployee = (empId) =>  {
+        EmployeeService.deletEmployeeById(empId).then(
+            response => {
+                this.setState(
+                    {
+                        employees: this.state.employees.filter(
+                            employee => employee.empId !== empId
+                        )
+                    }
+                )
+            }
+        )
     }
     componentDidMount() {
         EmployeeService.getlistOfAllEmployees().then(
             response => {
-                this.setState({ employees: response.data});
+                let employees = response.data;
+                let sortedEmployees = employees.sort(function(preEmployee, nextEmployee)  {
+                    return preEmployee.empId - nextEmployee.empId;
+                });
+                this.setState({ employees: sortedEmployees});
             }
         );
+        
     }
     render() {
         return (
-            <div className="ui segment">
+            <div className="ui segment ">
                 <div>
                     <button className="ui icon left labeled button" onClick={this.saveEmployee}>
                         <i aria-hidden="true" className="add icon"></i>Add new Employee</button>
@@ -36,10 +54,10 @@ class ListOfAllEmployees extends PureComponent {
                 <table className="ui single line table">
                     <thead className="">
                         <tr className="">
-                            <th className="">Employee ID</th>
-                            <th className="">Name</th>
-                            <th className="">E-mail address</th>
-                            <th className=""></th>
+                            <th className="text-center">Employee ID</th>
+                            <th className="text-center">Name</th>
+                            <th className="text-center">E-mail address</th>
+                            <th className="text-center"></th>
                         </tr>
                     </thead>
                     <tbody className="">
@@ -47,16 +65,16 @@ class ListOfAllEmployees extends PureComponent {
                             this.state.employees.map(
                                 employee => 
                                     <tr key ={employee.empId} className="">
-                                        <td className="">{employee.empId}</td>
-                                        <td className="">{employee.firstName +', '+employee.lastName}</td>
-                                        <td className="">{employee.email}</td>
-                                        <td className="">
+                                        <td className="text-center">{employee.empId}</td>
+                                        <td className="text-center">{employee.firstName +', '+employee.lastName}</td>
+                                        <td className="text-center">{employee.email}</td>
+                                        <td className="text-center">
                                             <div className="ui buttons">
-                                                <button className="ui button"
-                                                    onClick={this.updateEmployee}>Update</button>
+                                                <button className="ui blue button text-center"
+                                                    onClick={() => this.updateEmployee(employee.empId)}>Update</button>
                                                 <div className="or"></div>
-                                                <button className="ui positive button"
-                                                    onClick={this.deleteEmployee}>Delete</button>
+                                                <button className="ui red button text-center"
+                                                    onClick={() => this.deleteEmployee(employee.empId)}>Delete</button>
                                             </div></td>
                                     </tr>
                                 

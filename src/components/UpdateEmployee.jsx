@@ -1,14 +1,15 @@
 import React, { PureComponent } from 'react'
 import EmployeeService from '../services/EmployeeService';
 
-class SaveEmployee extends PureComponent {
+class UpdateEmployee extends PureComponent {
     constructor(props) {
         super(props)
 
         this.state = {
-                firstName:'',
-                lastName:'',
-                email:''
+                empId       :   this.props.match.params.empId,
+                firstName   :   this.props.match.params.firstName,
+                lastName    :   this.props.match.params.lastName,
+                email       :   this.props.match.params.email
             }
             this.saveEmployee = this.saveEmployee.bind(this);
             this.onFirstNameChange = this.onFirstNameChange.bind(this);
@@ -29,6 +30,18 @@ class SaveEmployee extends PureComponent {
     cancel = (event)    =>  {
         this.props.history.push('/');
     }
+    componentDidMount() {
+        EmployeeService.getEmployeeById(this.state.empId).then(
+            response => {
+                let employee = response.data;
+                this.setState({
+                    firstName   :   employee.firstName,
+                    lastName    :   employee.lastName,
+                    email   :   employee.email
+                });
+            }
+        )
+    }
     saveEmployee = (event)  =>  {
         event.preventDefault();
         let employee = {
@@ -37,9 +50,9 @@ class SaveEmployee extends PureComponent {
             email       :   this.state.email
         };
         console.log('Employee : '+JSON.stringify(employee));
-        EmployeeService.addEmployee(employee).then(
+        EmployeeService.updateEmployeeBiId(this.state.empId,employee).then(
             response => {
-               this.props.history.push('/employees');
+               this.props.history.push('/');
             }
         );
     } 
@@ -81,4 +94,4 @@ class SaveEmployee extends PureComponent {
     }
 }
 
-export default SaveEmployee;
+export default UpdateEmployee;
